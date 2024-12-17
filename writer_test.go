@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/cavaliergopher/cpio"
+	"github.com/aibor/cpio"
 )
 
 func store(w *cpio.Writer, fn string) error {

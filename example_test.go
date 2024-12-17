@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/cavaliergopher/cpio"
+	"github.com/aibor/cpio"
 )
 
 func Example() {
@@ -18,7 +18,7 @@ func Example() {
 	w := cpio.NewWriter(buf)
 
 	// Add some files to the archive.
-	var files = []struct {
+	files := []struct {
 		Name, Body string
 	}{
 		{"readme.txt", "This archive contains some text files."},

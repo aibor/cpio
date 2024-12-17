@@ -1,3 +1,3 @@
-module github.com/cavaliergopher/cpio
+module github.com/aibor/cpio
 
 go 1.17
