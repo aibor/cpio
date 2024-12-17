@@ -25,9 +25,8 @@ func NewReader(r io.Reader) *Reader {
 // when it reaches the end of that file, until Next is called to advance to the
 // next file.
 //
-// Calling Read on special types like TypeLink, TypeSymlink, TypeChar,
-// TypeBlock, TypeDir, and TypeFifo returns (0, io.EOF) regardless of what the
-// Header.Size claims.
+// Calling Read on special types like TypeLink, TypeChar, TypeBlock, TypeDir,
+// and TypeFifo returns (0, io.EOF) regardless of what the Header.Size claims.
 func (r *Reader) Read(p []byte) (n int, err error) {
 	if r.hdr == nil || r.eof == 0 {
 		return 0, io.EOF

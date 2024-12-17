@@ -19,7 +19,7 @@ func store(w *cpio.Writer, fn string) error {
 	if err != nil {
 		return err
 	}
-	hdr, err := cpio.FileInfoHeader(fi, "")
+	hdr, err := cpio.FileInfoHeader(fi)
 	if err != nil {
 		return err
 	}

@@ -87,19 +87,6 @@ func readSVR4Header(r io.Reader) (*Header, error) {
 		}
 	}
 
-	// read link name
-	if hdr.Mode&^ModePerm == ModeSymlink {
-		if hdr.Size < 1 || hdr.Size > svr4MaxNameSize {
-			return nil, ErrHeader
-		}
-		b := make([]byte, hdr.Size)
-		if _, err := io.ReadFull(r, b); err != nil {
-			return nil, err
-		}
-		hdr.Linkname = string(b)
-		hdr.Size = 0
-	}
-
 	return hdr, nil
 }
 

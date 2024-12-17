@@ -68,7 +68,6 @@ func (m FileMode) Perm() FileMode {
 // in preserving.
 type Header struct {
 	Name     string // Name of the file entry
-	Linkname string // Target name of link (valid for TypeLink or TypeSymlink)
 	Links    int    // Number of inbound links
 
 	Size int64    // Size in bytes
@@ -98,7 +97,7 @@ func (h *Header) FileInfo() os.FileInfo {
 // Since fs.FileInfo's Name method returns only the base name of the file it
 // describes, it may be necessary to modify Header.Name to provide the full path
 // name of the file.
-func FileInfoHeader(fi os.FileInfo, link string) (*Header, error) {
+func FileInfoHeader(fi os.FileInfo) (*Header, error) {
 	if fi == nil {
 		return nil, errors.New("cpio: FileInfo is nil")
 	}
@@ -125,7 +124,6 @@ func FileInfoHeader(fi os.FileInfo, link string) (*Header, error) {
 		h.Size = 0
 	case fm&os.ModeSymlink != 0:
 		h.Mode |= ModeSymlink
-		h.Linkname = link
 	case fm&os.ModeDevice != 0:
 		if fm&os.ModeCharDevice != 0 {
 			h.Mode |= ModeCharDevice

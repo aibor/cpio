@@ -100,9 +100,9 @@ func (w *Writer) WriteHeader(hdr *Header) (err error) {
 // Write writes to the current file in the CPIO archive. Write returns the error
 // ErrWriteTooLong if more than Header.Size bytes are written after WriteHeader.
 //
-// Calling Write on special types like TypeLink, TypeSymlink, TypeChar,
-// TypeBlock, TypeDir, and TypeFifo returns (0, ErrWriteTooLong) regardless of
-// what the Header.Size claims.
+// Calling Write on special types like TypeLink, TypeChar, TypeBlock, TypeDir,
+// and TypeFifo returns (0, ErrWriteTooLong) regardless of what the Header.Size
+// claims.
 func (w *Writer) Write(p []byte) (n int, err error) {
 	if w.closed {
 		err = ErrWriteAfterClose
