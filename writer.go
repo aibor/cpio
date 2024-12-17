@@ -4,6 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/fs"
+	"os"
+
+	"github.com/aibor/cpio/internal"
 )
 
 var (
@@ -137,4 +141,63 @@ func (w *Writer) Close() error {
 	w.Flush()
 	w.closed = true
 	return w.err
+}
+
+// AddFS adds the files from fs.FS to the archive.
+//
+// It walks the directory tree starting at the root of the filesystem adding
+// each file to the tar archive while maintaining the directory structure.
+func (w *Writer) AddFS(fsys fs.FS) error {
+	return fs.WalkDir(fsys, ".", func(
+		name string, d fs.DirEntry, err error,
+	) error {
+		if err != nil {
+			return err
+		}
+		if name == "." {
+			return nil
+		}
+
+		info, err := d.Info()
+		if err != nil {
+			return err
+		}
+
+		header, err := FileInfoHeader(info)
+		if err != nil {
+			return err
+		}
+		header.Name = name
+
+		if err = w.WriteHeader(header); err != nil {
+			return fmt.Errorf("write header: %w", err)
+		}
+
+		switch d.Type() {
+		case os.ModeDir:
+			// Directories do not have a body and fail on [fs.File.Read].
+			return nil
+		case fs.ModeSymlink:
+			target, err := internal.ReadLink(fsys, name)
+			if err != nil {
+				return err
+			}
+
+			_, err = w.Write([]byte(target))
+
+			return err
+		case 0:
+			file, err := fsys.Open(name)
+			if err != nil {
+				return err
+			}
+			defer file.Close()
+
+			_, err = io.Copy(w, file)
+
+			return err
+		default:
+			return fs.ErrInvalid
+		}
+	})
 }
