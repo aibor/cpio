@@ -10,10 +10,9 @@ concurrency:
 
 env:
   GOPATH: "${{ github.workspace }}/.go"
-  GOVERSION: "1.17.x"
 
 jobs:
-  lint:
+  go-lint:
     name: Go lint
     runs-on: ubuntu-24.04
     steps:
@@ -23,14 +22,14 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: "${{ env.GOVERSION }}"
+          go-version-file: go.mod
 
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
           version: "v1.62"
 
-  test:
+  go-test:
     name: Go test
     runs-on: ubuntu-24.04
     steps:
@@ -40,7 +39,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: "${{ env.GOVERSION }}"
+          go-version-file: go.mod
 
       - name: Run go tests
         run: |
@@ -55,8 +54,8 @@ jobs:
     runs-on: ubuntu-24.04
     name: Test Results
     needs:
-    - lint
-    - test
+    - go-lint
+    - go-test
     steps:
     - run: exit 1
       if: |
