@@ -22,7 +22,7 @@ func (fi fileInfo) Name() string {
 func (fi fileInfo) Size() int64        { return fi.h.Size }
 func (fi fileInfo) IsDir() bool        { return fi.Mode().IsDir() }
 func (fi fileInfo) ModTime() time.Time { return fi.h.ModTime }
-func (fi fileInfo) Sys() interface{}   { return fi.h }
+func (fi fileInfo) Sys() any           { return fi.h }
 
 func (fi fileInfo) Mode() (mode os.FileMode) {
 	mode = os.FileMode(fi.h.Mode).Perm()
